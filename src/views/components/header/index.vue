@@ -7,7 +7,7 @@
             router
         >
             <el-menu-item index="/">主页</el-menu-item>
-            <el-menu-item index="2">任务中心</el-menu-item>
+            <el-menu-item index="/history">历史记录</el-menu-item>
         </el-menu>
     </div>
 </template>
