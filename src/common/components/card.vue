@@ -1,5 +1,5 @@
 <template>
-    <el-card class="todo__card_main" :class="{ 'todo-card_empty': !!empty }">
+    <el-card class="todo-card_main" :class="{ 'todo-card_empty': !!empty }">
         <i
             v-if="!empty"
             class="tab__card__rivet"
@@ -7,7 +7,11 @@
             @click="confirmToDone"
         />
         <i class="el-icon-circle-plus-outline" v-else />
-        <slot></slot>
+        <l-container class="todo-card__content" v-if="!empty">
+            <span>
+                我具有超长的标题哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦哦
+            </span>
+        </l-container>
         <i
             v-if="!empty"
             class="tab__card__rivet el-icon-close card_bottom-fixed"
@@ -48,7 +52,7 @@ export default {
 $body = 'el-card__body'
 $color = rgba(255, 255, 255, .2)
 
-.todo__card_main
+.todo-card_main
     position relative
     height 100%
     border-color rgba(0, 0, 0, .1)
@@ -59,6 +63,22 @@ $color = rgba(255, 255, 255, .2)
         flex-direction column
         align-items stretch
         height 100%
+
+        .todo-card__content
+            padding 12px 0 24px
+            text-align center
+            font-size 24px
+            font-weight 600
+            color rgba(25, 25, 25, .6)
+
+            span
+                display -webkit-box
+                overflow hidden
+                text-overflow ellipsis
+                line-height 28px
+                letter-spacing 2px
+                -webkit-line-clamp 5
+                -webkit-box-orient vertical
 
         .tab__card__rivet
             color $color + rgba(255, 255, 255, .3)

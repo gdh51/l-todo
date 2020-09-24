@@ -3,18 +3,19 @@
         <transition-group
             tag="div"
             class="todo-tab__display"
-            enter-active-class="animate__zoomInDown"
-            leave-active-class="animate__zoomOutDown"
+            enter-active-class="animate__flipInY"
+            leave-active-class="animate__flipOutY"
         >
             <todo-card
                 v-for="(todo, index) in todoList"
                 :key="todo.uid"
                 v-bind="{ todo, index }"
-                class="animate__animated"
+                class="animate__animated todo-tab__card"
                 @done-todo="doneTodo(todo, index)"
                 @del-todo="delTodo(index)"
             ></todo-card>
             <todo-card
+                class="todo-tab__card_add todo-tab__card"
                 @click.native="addTodo"
                 v-if="todoList.length !== MAX_CARD_NUM"
                 :key="0"
@@ -80,4 +81,7 @@ $color = rgba(255, 255, 255, .2)
             grid-template-columns repeat(6, 180px)
             grid-template-rows repeat(2, 250px)
             row-gap 24px
+
+            .todo-tab__card
+                transition all .3s
 </style>
