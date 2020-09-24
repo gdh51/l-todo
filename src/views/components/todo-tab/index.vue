@@ -1,11 +1,12 @@
 <template>
     <el-card class="todo-tab__card_main">
-        <transition-group tag="div" class="todo-tab__display" mode="out-in">
+        <transition-group tag="div" class="todo-tab__display">
             <todo-card
                 v-for="(todo, index) in todoList"
                 :key="todo.uid"
                 v-bind="{ todo, index }"
                 @done-todo="doneTodo(todo, index)"
+                @del-todo="delTodo(index)"
             ></todo-card>
             <todo-card
                 @click.native="addTodo"
@@ -42,6 +43,10 @@ export default {
         },
 
         doneTodo(todo, index) {
+            this.delTodo(index)
+        },
+
+        delTodo(index) {
             this.todoList.splice(index, 1)
         }
     }
