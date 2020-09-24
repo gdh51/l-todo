@@ -7,6 +7,7 @@ import './common/style/reset.styl'
 import El from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import './common/components'
+import 'animate.css'
 
 Vue.config.productionTip = true
 Vue.use(El)

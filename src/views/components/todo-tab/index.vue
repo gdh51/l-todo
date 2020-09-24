@@ -1,10 +1,16 @@
 <template>
     <el-card class="todo-tab__card_main">
-        <transition-group tag="div" class="todo-tab__display">
+        <transition-group
+            tag="div"
+            class="todo-tab__display"
+            enter-active-class="animate__zoomInDown"
+            leave-active-class="animate__zoomOutDown"
+        >
             <todo-card
                 v-for="(todo, index) in todoList"
                 :key="todo.uid"
                 v-bind="{ todo, index }"
+                class="animate__animated"
                 @done-todo="doneTodo(todo, index)"
                 @del-todo="delTodo(index)"
             ></todo-card>
