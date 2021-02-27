@@ -2,19 +2,19 @@
     <div id="l-todo__app">
         <div class="app__bg"></div>
         <l-todo-header />
-        <l-container class="app__display-area">
-            <router-view />
-        </l-container>
+        <l-todo-body />
     </div>
 </template>
 
 <script>
-import LTodoHeader from './views/components/header/index'
+import LTodoHeader from './views/header/index'
+import LTodoBody from './views/body/index'
 
 export default {
     name: 'LTodoApp',
     components: {
-        LTodoHeader
+        LTodoHeader,
+        LTodoBody
     }
 }
 </script>
@@ -30,8 +30,8 @@ export default {
         z-index -1
         width 100%
         height 100%
-        background-image linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .3)), url('./assets/image/bg.jpg')
         background-color rgba(0, 0, 0, .3)
+        background-image linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .3)), url('./assets/image/bg1.png')
         background-position center center
         background-size cover
         background-repeat no-repeat
