@@ -5,6 +5,7 @@
                 v-for="todo in todos"
                 :key="todo.uid"
                 :shortData="todo"
+                :is-add="todo.add"
                 class="l-todo__list-card"
                 suspended
             />

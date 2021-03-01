@@ -31,7 +31,7 @@ export default {
         width 100%
         height 100%
         background-color rgba(0, 0, 0, .3)
-        background-image linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .3)), url('./assets/image/bg1.png')
+        background-image linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .3)), url('./assets/image/bg.jpg')
         background-position center center
         background-size cover
         background-repeat no-repeat

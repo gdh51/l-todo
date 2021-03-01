@@ -1,6 +1,18 @@
 <template>
     <div class="l-todo__header">
-        <l-todo-menu :is-show="isFold" />
+        <l-menu
+            class="l-todo__menu"
+            :style="{ top: this.isFold ? '0' : '-56px' }"
+            @path-change="changePage"
+            routerKey="l-menu"
+        >
+            <l-menu-item
+                v-for="{ name, path } in routes"
+                :path="path"
+                :key="path"
+                >{{ name }}
+            </l-menu-item>
+        </l-menu>
         <l-icon
             icon="arrow-up"
             :style="arrowDeg"
@@ -11,17 +23,21 @@
 </template>
 
 <script>
-import LTodoMenu from './components/menu'
+import { useRoute, getRouterByKey } from 'l-182-ui/src/utils/implicit-router'
+import { routes } from '@/routes'
+
+useRoute({
+    key: 'menu',
+    routes
+})
 
 export default {
     name: 'LTodoHeader',
-    components: {
-        LTodoMenu
-    },
 
     data() {
         return {
-            isFold: false
+            isFold: false,
+            routes
         }
     },
 
@@ -36,6 +52,11 @@ export default {
     methods: {
         toggleFold() {
             this.isFold = !this.isFold
+        },
+
+        changePage(path) {
+            const router = getRouterByKey('menu')
+            router.push(path)
         }
     }
 }
@@ -49,6 +70,12 @@ export default {
     align-items center
     padding 12px
     height 80px
+
+    .l-todo__menu
+        position absolute
+        right 60px
+        font-weight 600
+        transition .3s ease top
 
     .l-todo__menu-toggle
         margin-top 6px
