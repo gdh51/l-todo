@@ -2,7 +2,13 @@
     <l-slide-box height="100%" width="100%" ref="slide-box">
         <template v-for="(panel, index) in calcPanels">
             <l-slide-panel :key="index">
-                <l-todo-panel :todos="panel" />
+                <l-todo-panel
+                    :todos="panel"
+                    @add-todo="addTodo"
+                    @delete="delTodo"
+                    @done="doneTodo"
+                    @toggle="toggleTodoOpTab"
+                />
             </l-slide-panel>
         </template>
     </l-slide-box>
@@ -12,6 +18,13 @@
 import LTodoPanel from './components/todo-panel'
 import { debounce } from 'l-182-ui/src/utils/lazy'
 import { on, off } from 'l-182-ui/src/utils/event'
+import { useStore } from 'l-182-ui/src/api/store'
+import { $modal } from 'l-182-ui'
+
+// eslint-disable-next-line
+const [_, updateStore, STORE] = useStore({
+    key: 'l-todo'
+})
 
 export default {
     name: 'LTodoManager',
@@ -21,12 +34,7 @@ export default {
     data() {
         return {
             singleCardCapacity: 0,
-            todoList: [
-                {
-                    uid: 0,
-                    add: true
-                }
-            ]
+            todoList: []
         }
     },
 
@@ -34,15 +42,24 @@ export default {
         calcPanels() {
             const capacity = this.singleCardCapacity
             if (!capacity) return []
-            const length = Math.ceil(this.todoList.length / capacity),
+            const length = Math.ceil(this.mergedTodoList.length / capacity),
                 todoPanels = []
 
             for (let i = 0; i < length; i++) {
                 todoPanels.push(
-                    this.todoList.slice(i * capacity, (i + 1) * capacity)
+                    this.mergedTodoList.slice(i * capacity, (i + 1) * capacity)
                 )
             }
             return todoPanels
+        },
+        mergedTodoList() {
+            return [
+                {
+                    uid: 0,
+                    add: true
+                },
+                ...this.todoList
+            ]
         }
     },
 
@@ -56,7 +73,63 @@ export default {
 
             this.singleCardCapacity =
                 Math.floor((width - 40) / 220) * Math.floor((height - 40) / 320)
+        },
+
+        addTodo(todo) {
+            const todoList = this.todoList,
+                lastOne = todoList.slice(-1)
+
+            todoList.push({
+                ...todo,
+                uid: ((lastOne && lastOne.uid) || 0) + 1,
+                isEdit: false
+            })
+
+            updateStore({
+                key: 'l-todo',
+                todoList: this.todoList
+            })
+        },
+
+        toggleTodoOpTab({ todo, isEdit }) {
+            todo.isEdit = isEdit
+        },
+
+        doneTodo(todo) {
+            console.log(todo)
+        },
+
+        async delTodo(todo) {
+            const todoIndex = this.todoList.findIndex((t) => t === todo)
+
+            if (todoIndex > -1) {
+                const { isConfirm } = await $modal({
+                    title: '提示',
+                    content: '确定删除该Todo吗?'
+                }).pending
+                if (!isConfirm) return
+
+                this.todoList.splice(todoIndex, 1)
+                updateStore({
+                    key: 'l-todo',
+                    todoList: this.todoList
+                })
+            }
         }
+    },
+
+    created() {
+        const { todoList } = STORE.$store
+
+        // 没有时进行初始化
+        if (!todoList) {
+            updateStore({
+                key: 'l-todo',
+                todoList: []
+            })
+        }
+
+        this.todoList = STORE.$store.todoList
     },
 
     mounted() {

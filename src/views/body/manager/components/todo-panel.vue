@@ -8,6 +8,11 @@
                 :is-add="todo.add"
                 class="l-todo__list-card"
                 suspended
+                @add-todo="$emit('add-todo', $event)"
+                @delete="$emit('delete', $event)"
+                @done="$emit('done', $event)"
+                @toggle="$emit('toggle', $event)"
+                :is-edit="todo.isEdit"
             />
         </l-card>
     </div>

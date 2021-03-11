@@ -2,7 +2,7 @@
     <div class="l-todo__header">
         <l-menu
             class="l-todo__menu"
-            :style="{ top: this.isFold ? '0' : '-56px' }"
+            :style="{ top: this.isFold ? '0' : '-80px' }"
             @path-change="changePage"
             routerKey="l-menu"
         >
@@ -10,8 +10,7 @@
                 v-for="{ name, path } in routes"
                 :path="path"
                 :key="path"
-                >{{ name }}
-            </l-menu-item>
+            >{{ name }}</l-menu-item>
         </l-menu>
         <l-icon
             icon="arrow-up"

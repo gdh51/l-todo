@@ -10,7 +10,8 @@
     "dependencies": {
         "animate.css": "^4.1.1",
         "core-js": "^3.6.5",
-        "l-182-ui": "^1.0.14",
+        "l-182-ui": "^1.0.18",
+        "l-markdown": "^1.0.5",
         "lodash": "^4.17.20",
         "vue": "^2.6.11",
         "vue-router": "^3.2.0",

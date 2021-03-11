@@ -1,40 +1,93 @@
 <template>
     <l-card suspended class="l-todo-card">
-        <div class="l-todo-card__header">
-            <div class="l-todo-card__text-wrapper">{{ shortData.title }}</div>
+        <template v-if="!isAdd">
+            <div class="l-todo-card__header">
+                <div class="l-todo-card__text-wrapper">{{ shortData.title }}</div>
+                <l-icon
+                    icon="editalt3"
+                    class="l-todo-card_edit"
+                    v-if="!isEdit"
+                    @click="
+                        $emit('toggle', {
+                            isEdit: true,
+                            todo: shortData
+                        })
+                    "
+                />
+            </div>
+            <div class="l-todo-card__ctx">
+                <l-markdown
+                    :text="shortData.desc"
+                    class="l-todo-card__text-wrapper"
+                    :renderClass="markdownRenderClz"
+                />
+            </div>
+            <div class="l-todo-card__op-tab" v-show="isEdit">
+                <l-icon
+                    icon="deletealt1"
+                    class="l-todo-card__op-icon"
+                    @click="$emit('delete', shortData)"
+                />
+                <l-icon
+                    icon="finish"
+                    class="l-todo-card__op-icon"
+                    @click="$emit('done', shortData)"
+                />
+                <l-icon
+                    icon="close"
+                    class="l-todo-card__op-back l-todo-card__op-icon"
+                    @click="
+                        $emit('toggle', {
+                            isEdit: false,
+                            todo: shortData
+                        })
+                    "
+                />
+            </div>
+        </template>
+        <div class="l-todo-card__op-add" @click="addTodo" v-else>
+            <l-icon icon="add" class="l-todo-card__add-icon" />
         </div>
-        <div class="l-todo-card__ctx">
-            <div class="l-todo-card__text-wrapper">{{ shortData.desc }}</div>
-        </div>
-        <div class="l-todo-card__op-add">
-            <l-icon icon="add" class="l-todo-card__add-icon" @click="addTodo" />
-        </div>
-        <!-- <div class="l-todo-card__op-tab">
-            <l-icon icon="deletealt1" class="l-todo-card__op-icon" />
-        </div>-->
     </l-card>
 </template>
 
 <script>
 import { $modal } from 'l-182-ui'
 import LTodoAddForm from './todo-add-form'
+import LMarkdown from 'l-markdown/lib/l-markdown'
 
 export default {
     name: 'LTodoCard',
+    components: {
+        LMarkdown
+    },
     props: {
         shortData: Object,
-        isAdd: Boolean
+        isAdd: Boolean,
+        isEdit: Boolean
     },
 
     data() {
         return {}
     },
     methods: {
-        addTodo() {
-            $modal({
+        async addTodo() {
+            const {
+                modal: {
+                    slotInstances: {
+                        content: { form }
+                    }
+                },
+                isConfirm
+            } = await $modal({
                 title: '添加Todo',
-                content: LTodoAddForm
-            })
+                content: LTodoAddForm,
+                confirm: '添加'
+            }).pending
+
+            if (!isConfirm) return
+
+            this.$emit('add-todo', form)
         }
     }
 }
@@ -62,7 +115,7 @@ hover-panel()
     bottom 0
     left 0
     display flex
-    justify-content center
+    justify-content space-evenly
     align-items center
     border-radius 5px
     cursor default
@@ -80,6 +133,7 @@ ellipsisMultiple()
     background-color rgba(94, 72, 170, .7) !important
 
     .l-todo-card__header
+        position relative
         padding 8px
         width 100%
         height 80px
@@ -92,6 +146,15 @@ ellipsisMultiple()
         .l-todo-card__text-wrapper
             -webkit-line-clamp 3
             ellipsisMultiple()
+
+        .l-todo-card_edit
+            position absolute
+            right 0
+            bottom -11px
+            left 0
+            font-size 30px
+            cursor pointer
+            transform translateX(calc(50% - 7.5px))
 
     .l-todo-card__ctx
         flex 1
@@ -110,12 +173,12 @@ ellipsisMultiple()
         hover-panel()
         background-image linear-gradient(45deg, $step-one, $step-two, $step-three, $step-one, $step-two)
         background-size 1000% 200%
+        cursor pointer
         animation changecolor 5s infinite linear
 
         .l-todo-card__add-icon
             color #fff
             font-size 60px
-            cursor pointer
 
     .l-todo-card__op-tab
         hover-panel()
@@ -125,4 +188,12 @@ ellipsisMultiple()
         .l-todo-card__op-icon
             font-size 30px
             cursor pointer
+
+            ^[2..2] + ^[2..2]
+                margin-left 8px
+
+            &.l-todo-card__op-back
+                position absolute
+                top 65px
+                margin-left 0
 </style>
